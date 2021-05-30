@@ -8,8 +8,6 @@ class Product < ApplicationRecord
   scope :viewed, -> { where("views > 0 ") }
   scope :active_viewed, -> { active.viewed }
 
-  # scope :active_viewed, lambda { :conditions => ['views > ? AND active = ?', 1, true] }
-
   def update_view_and_save
     self.views = self.views + 1
     self.save
@@ -41,6 +39,7 @@ class Product < ApplicationRecord
 
   def as_json(options = {})
     json = super(options)
+    options[:currency] = DEFAULT_CURRENCY if options[:currency].nil?
     converted_price = convert_currency(json["price"], DEFAULT_CURRENCY, options[:currency])
     json["price"] = converted_price #Modify price attribute to include currency
     json

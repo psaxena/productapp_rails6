@@ -67,8 +67,8 @@ class ProductsController < ApplicationController
     if currency.nil?
       render json: { status: :unprocessable_entity, description: "Currency '#{params[:currency]}' is not supported" }
     else
-      limit_count = (params[:top] && params[:top].to_i.is_a?(Integer)) ? params[:top].to_i : nil
-      @products = (limit_count) ? Product.active_viewed.limit(limit_count).order(views: :desc) : Product.active_viewed.order(views: :desc)
+      limit_count = (params[:top] && params[:top].to_i.is_a?(Integer)) ? params[:top].to_i : 5
+      @products = Product.active_viewed.limit(limit_count).order(views: :desc)
       render json: @products.to_json(:currency => currency)
     end
   end
